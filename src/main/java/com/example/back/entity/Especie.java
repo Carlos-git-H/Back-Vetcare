@@ -8,18 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
+
+
 @Data
 @Entity
-@Table(name = "VC_TBRO")
-public class Rol {
+@Table(name="VC_TBES")
+public class Especie {
     
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Long idRol;
+    private Long idEspecie;
 
     @Column(nullable = false, unique = true)
     private String name;
-
-    @Column(columnDefinition = "CHAR(1) DEFAULT '1'")
-    private Character status;
 }

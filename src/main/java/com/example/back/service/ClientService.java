@@ -17,7 +17,6 @@ import com.example.back.repository.UserRepository;
 public class ClientService {
     
 
-
     @Autowired
     private ClientRepository clientRepository;
 
@@ -45,8 +44,6 @@ public class ClientService {
         return clientRepository.searchClients(dni, name, lastName, cellphone, email);
     }
 
-
-    //
     public Client createClientWithUser(Client client) {
         // Verifica si el cliente tiene un User asociado en el JSON
         if (client.getUser() != null) {
@@ -54,7 +51,13 @@ public class ClientService {
             User savedUser = userRepository.save(client.getUser());
             client.setUser(savedUser);
         }
-        
         return clientRepository.save(client);
     }
+
+
+    public boolean blockClient(Long clientId) {
+        int rowsUpdated = clientRepository.blockClient(clientId);
+        return rowsUpdated > 0;
+    }
+    
 }

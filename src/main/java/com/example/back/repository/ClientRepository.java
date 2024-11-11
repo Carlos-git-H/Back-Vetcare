@@ -4,11 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.back.entity.Client;
+
+import jakarta.transaction.Transactional;
 
 @Repository
 public interface ClientRepository extends  JpaRepository<Client, Long>
@@ -24,4 +27,10 @@ public interface ClientRepository extends  JpaRepository<Client, Long>
                                @Param("lastName") String lastName,
                                @Param("cellphone") String cellphone,
                                @Param("email") String email);
+
+                               @Transactional
+                               @Modifying
+                               @Query("UPDATE Client c SET c.status = '0' WHERE c.idClient = :clientId")
+                               int blockClient(@Param("clientId") Long clientId);
+                               
 }
