@@ -37,10 +37,10 @@ public class EmployeeController {
     }
 
     @PutMapping("/update/{employeeId}")
-    public ResponseEntity<String> updateEmployee(@PathVariable Long employeeId, @RequestBody Employee employee) {
+        public ResponseEntity<String> updateClient(@PathVariable Long employeeId, @RequestBody Employee employee) {
         employeeService.saveOrUpdate(employee);
-        return ResponseEntity.ok( "Empleado actualizado exitosamente.");
-    }   
+        return ResponseEntity.ok("Empleado actualizado exitosamente.");
+    }
 
     @GetMapping("/search")
     public Optional<List<Employee>> searchEmployees(

@@ -30,7 +30,6 @@ public class ClientController {
     @Autowired
     private ClientService clientService;
 
-
     @GetMapping
     public List<Client> getAll(){
         return clientService.getClients();
@@ -45,7 +44,7 @@ public class ClientController {
         public ResponseEntity<String> updateClient(@PathVariable Long clientId, @RequestBody Client client) {
         clientService.saveOrUpdate(client);
         return ResponseEntity.ok("Cliente actualizado exitosamente.");
-    }    
+    }
 
     @DeleteMapping("/{clientId}")
     public void delete(@PathVariable("clientId") Long clientId){

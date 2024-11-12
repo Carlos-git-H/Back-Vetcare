@@ -28,9 +28,9 @@ public interface ClientRepository extends  JpaRepository<Client, Long>
                                @Param("cellphone") String cellphone,
                                @Param("email") String email);
 
-                               @Transactional
-                               @Modifying
-                               @Query("UPDATE Client c SET c.status = '0' WHERE c.idClient = :clientId")
-                               int blockClient(@Param("clientId") Long clientId);
+        @Transactional
+        @Modifying
+        @Query("UPDATE Client c SET c.status = '0' WHERE c.idClient = :clientId")
+        int blockClient(@Param("clientId") Long clientId);
                                
 }
