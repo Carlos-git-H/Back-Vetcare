@@ -1,15 +1,14 @@
 package com.example.back.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.example.back.entity.ServiceEntity;
 import com.example.back.repository.ServiceRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ServiceService {
@@ -17,25 +16,58 @@ public class ServiceService {
     @Autowired
     private ServiceRepository serviceRepository;
 
-    public List<ServiceEntity> getServices() {
-        return serviceRepository.findAll();
+    public Page<ServiceEntity> getServicesByStatus(Pageable pageable) {
+        return serviceRepository.findByStatus('1', pageable);
     }
 
-    public Optional<ServiceEntity> getService(Long id){
+    public Optional<ServiceEntity> getService(Long id) {
         return serviceRepository.findById(id);
     }
 
-    public void saveOrUpdate(ServiceEntity service){
-        serviceRepository.save(service);
+    public void saveService(ServiceEntity serviceEntity) {
+        serviceRepository.save(serviceEntity);
     }
 
-    //buscar por especie, categoria,name
-    public Optional<List<ServiceEntity>> searchServices(Long especieId, Long categoryId, String name) {
-        return serviceRepository.searchServices(especieId, categoryId, name);
+    public void updateService(ServiceEntity updatedService) {
+        Optional<ServiceEntity> existingServiceOpt = serviceRepository.findById(updatedService.getIdService());
+
+        if (existingServiceOpt.isPresent()) {
+            ServiceEntity existingService = existingServiceOpt.get();
+
+            // Actualiza solo los campos necesarios
+            existingService.setName(updatedService.getName());
+            existingService.setDescription(updatedService.getDescription());
+            existingService.setRecommendedAge(updatedService.getRecommendedAge());
+            existingService.setRecommendedFrequency(updatedService.getRecommendedFrequency());
+            existingService.setPrice(updatedService.getPrice());
+            existingService.setDirImage(updatedService.getDirImage());
+            existingService.setStatus(updatedService.getStatus());
+
+            // Actualiza asociaciones
+            if (updatedService.getCategory() != null) {
+                existingService.setCategory(updatedService.getCategory());
+            }
+            if (updatedService.getEspecie() != null) {
+                existingService.setEspecie(updatedService.getEspecie());
+            }
+
+            serviceRepository.save(existingService);
+        } else {
+            throw new IllegalArgumentException("El servicio con el ID proporcionado no existe");
+        }
     }
 
-    @Transactional
-    public int blockService(Long serviceId) {
-        return serviceRepository.blockService(serviceId);
+    public Page<ServiceEntity> searchServices(String name, String categoryName, String especieName, Character status, Pageable pageable) {
+        return serviceRepository.searchServices(name, categoryName, especieName, status, pageable);
+    }
+
+    public boolean blockService(Long serviceId) {
+        int rowsUpdated = serviceRepository.blockService(serviceId);
+        return rowsUpdated > 0;
+    }
+
+    public List<ServiceEntity> searchServicesByName(String name) {
+        return serviceRepository.findByNameContainingIgnoreCase(name);
     }
 }
+

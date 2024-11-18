@@ -43,7 +43,7 @@ public class Pet {
 
     private String comments;
 
-    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'UserFoto.png'", nullable=false)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'PetFoto.png'", nullable=false)
     private String dirImage;
 
     @Column(columnDefinition = "CHAR(1) DEFAULT '1'", nullable=false)
