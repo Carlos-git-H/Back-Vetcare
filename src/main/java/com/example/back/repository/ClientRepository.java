@@ -41,4 +41,6 @@ public interface ClientRepository extends  JpaRepository<Client, Long>
         //buscar para el nuevo pet
         Optional<Client> findByDni(String dni);
 
+        Optional<Client> findByUser_IdUser(Long userId);
+
 }

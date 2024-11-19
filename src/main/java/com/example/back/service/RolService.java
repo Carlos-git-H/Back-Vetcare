@@ -34,4 +34,7 @@ public class RolService {
         rolRepository.deleteById(id);
     }
 
+    public List<Rol> getActiveRoles() {
+        return rolRepository.findActiveRoles();
+    }
 }

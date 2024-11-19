@@ -1,5 +1,7 @@
 package com.example.back.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +20,8 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Query("SELECT e FROM Employee e WHERE " +
             "(:dni IS NULL OR e.dni LIKE %:dni%) AND " +
             "(:status IS NULL OR e.status = :status) AND " +
-            "(:role IS NULL OR e.role.name LIKE %:role%) AND " +
-            "(:name IS NULL OR (e.firstName LIKE %:name% OR e.lastName LIKE %:name%))")
+            "(:role IS NULL OR e.rol.name LIKE %:role%) AND " +
+            "(:name IS NULL OR (e.firstName LIKE %:name% OR e.preName LIKE %:name%))")
     Page<Employee> searchEmployees(
             @Param("dni") String dni,
             @Param("status") Character status,
@@ -31,4 +33,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     @Modifying
     @Query("UPDATE Employee e SET e.status = '0' WHERE e.id = :employeeId")
     int blockEmployee(@Param("employeeId") Long employeeId);
+
+    Optional<Employee> findByUser_IdUser(Long userId); 
 }

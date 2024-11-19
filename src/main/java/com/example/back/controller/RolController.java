@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import com.example.back.entity.Rol;
 import com.example.back.service.RolService;
 
 @RestController
+@CrossOrigin("http://localhost:5173")
 @RequestMapping(path = "api/roles")
 public class RolController {
 
@@ -41,6 +44,12 @@ public class RolController {
     @DeleteMapping("/{rolId}")
     public void delete(@PathVariable("rolId") Long rolId){
         rolService.delete(rolId);
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<List<Rol>> getActiveRoles() {
+        List<Rol> activeRoles = rolService.getActiveRoles();
+        return ResponseEntity.ok(activeRoles);
     }
     
 }
