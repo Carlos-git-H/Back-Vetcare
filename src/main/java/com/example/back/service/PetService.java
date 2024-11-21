@@ -91,5 +91,10 @@ public class PetService {
         int rowsUpdated = petRepository.blockPet(petId);
         return rowsUpdated > 0;
     }
+
+    public Page<Pet> getActivePetsByClientId(Long clientId, Pageable pageable) {
+        return petRepository.findActivePetsByClientId(clientId, pageable);
+    }
+    
 }
 

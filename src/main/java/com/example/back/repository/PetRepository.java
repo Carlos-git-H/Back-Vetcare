@@ -32,4 +32,10 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
     @Modifying
     @Query("UPDATE Pet p SET p.status = '0' WHERE p.idPet = :petId")
     int blockPet(@Param("petId") Long petId);
+
+
+        @Query("SELECT p FROM Pet p WHERE " +
+                "p.client.idClient = :clientId AND " + 
+                "p.status = '1'")
+        Page<Pet> findActivePetsByClientId(@Param("clientId") Long clientId, Pageable pageable);
 }

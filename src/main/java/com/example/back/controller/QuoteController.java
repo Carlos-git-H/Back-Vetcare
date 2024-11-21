@@ -121,4 +121,14 @@ public class QuoteController {
         }
     }
 
+    @GetMapping("/client")
+    public ResponseEntity<Page<Quote>> getActiveQuotesByClientId(
+            @RequestParam Long clientId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Quote> quotes = quoteService.getActiveQuotesByClientId(clientId, pageable);
+        return ResponseEntity.ok(quotes);
+    }
+
 }

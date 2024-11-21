@@ -33,6 +33,8 @@ public class PetController {
         return ResponseEntity.ok(pets);
     }
 
+    
+
     @GetMapping("/{petId}")
     public ResponseEntity<?> getPetById(@PathVariable Long petId) {
         Optional<Pet> pet = petService.getPet(petId);
@@ -41,6 +43,17 @@ public class PetController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada.");
         }
+    }
+
+    //Pets de un cliente
+    @GetMapping("/client")
+    public ResponseEntity<Page<Pet>> getActivePetsByClientId(
+            @RequestParam Long clientId,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Pet> pets = petService.getActivePetsByClientId(clientId, pageable);
+        return ResponseEntity.ok(pets);
     }
 
     @PutMapping("/update/{petId}")

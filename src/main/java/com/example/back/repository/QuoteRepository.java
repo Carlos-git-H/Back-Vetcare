@@ -45,5 +45,9 @@ public interface QuoteRepository extends JpaRepository<Quote,Long>{
     int confirmPayment(@Param("quoteId") Long quoteId);
 
 
-    
+
+    @Query("SELECT q FROM Quote q WHERE " +
+            "q.pet.client.idClient = :clientId AND " + 
+            "q.status = '1'")
+    Page<Quote> findActiveQuotesByClientId(@Param("clientId") Long clientId, Pageable pageable);
 }

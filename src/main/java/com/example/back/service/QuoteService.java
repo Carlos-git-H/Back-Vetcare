@@ -76,4 +76,8 @@ public class QuoteService {
             throw new IllegalArgumentException("La cita con el ID proporcionado no existe.");
         }
     }
+
+    public Page<Quote> getActiveQuotesByClientId(Long clientId, Pageable pageable) {
+        return quoteRepository.findActiveQuotesByClientId(clientId, pageable);
+    }
 }
