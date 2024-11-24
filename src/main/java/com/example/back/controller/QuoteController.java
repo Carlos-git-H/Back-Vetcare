@@ -38,11 +38,13 @@ public class QuoteController {
         return quoteService.getQuotes();
     }
 
+    //obtener datos de una cita (id)
     @GetMapping("/{quoteId}")
     public Optional<Quote> getById(@PathVariable ("quoteId") Long quoteId){
         return quoteService.getQuote(quoteId);
     }
 
+    //crear cita
     @PostMapping("/create")
     public ResponseEntity<Quote> createQuote(@RequestBody Quote quote) {
         try {
@@ -53,6 +55,7 @@ public class QuoteController {
         }
     }
 
+    //actualizar datos de cita
     @PutMapping("/update/{quoteId}")
     public ResponseEntity<String> updateQuote(@PathVariable Long quoteId, @RequestBody Quote updatedQuote) {
         try {
@@ -65,6 +68,7 @@ public class QuoteController {
         }
     }
 
+    //metodo paginacion y buscar citas
     @GetMapping("/search")
     public ResponseEntity<?> searchQuotes(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
@@ -91,6 +95,7 @@ public class QuoteController {
         ));
     }
 
+    //Cancelar cita
     @PutMapping("/{quoteId}/cancel")
     public ResponseEntity<?> cancelQuote(@PathVariable Long quoteId) {
         try {
@@ -101,6 +106,7 @@ public class QuoteController {
         }
     }
 
+    //Confirmar que llego a la cita
     @PutMapping("/{quoteId}/confirm")
     public ResponseEntity<?> confirmQuote(@PathVariable Long quoteId) {
         try {
@@ -110,6 +116,8 @@ public class QuoteController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+    
+    //confirmar pago
 
     @PutMapping("/{quoteId}/confirm-payment")
     public ResponseEntity<?> confirmPayment(@PathVariable Long quoteId) {
@@ -121,6 +129,7 @@ public class QuoteController {
         }
     }
 
+    //citas de un cliente
     @GetMapping("/client")
     public ResponseEntity<Page<Quote>> getActiveQuotesByClientId(
             @RequestParam Long clientId,
@@ -129,6 +138,68 @@ public class QuoteController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Quote> quotes = quoteService.getActiveQuotesByClientId(clientId, pageable);
         return ResponseEntity.ok(quotes);
+    }
+
+
+    //Citas activas para el full Calendar del Empleado
+    @GetMapping("/employee/calendar")
+    public ResponseEntity<?> getActiveQuotes() {
+        try {
+            List<Map<String, Object>> activeQuotes = quoteService.getActiveQuotes();
+            return ResponseEntity.ok(activeQuotes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al recuperar las citas activas: " + e.getMessage());
+        }
+    }
+
+
+    // Total de citas activas
+    @GetMapping("/active/total")
+    public ResponseEntity<Long> getTotalActiveQuotes() {
+        long total = quoteService.getTotalActiveQuotes();
+        return ResponseEntity.ok(total);
+    }
+
+    // Citas activas de hoy
+    @GetMapping("/active/today")
+    public ResponseEntity<Long> getTodayActiveQuotes() {
+        long todayTotal = quoteService.getTodayActiveQuotes();
+        return ResponseEntity.ok(todayTotal);
+    }
+
+
+    
+    /*---------------------Cliente-------------------- */
+
+    //Contenido para el citas del calendar
+    @GetMapping("/{clientId}/active")
+    public ResponseEntity<?> getActiveQuotesByClientId(@PathVariable Long clientId) {
+        try {
+            List<Map<String, Object>> activeQuotes = quoteService.getActiveQuotesByClientId(clientId);
+            if (activeQuotes.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("No se encontraron citas activas para el cliente con ID: " + clientId);
+            }
+            return ResponseEntity.ok(activeQuotes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al recuperar las citas activas: " + e.getMessage());
+        }
+    }
+
+
+    // Total de citas activas para un cliente específico
+    @GetMapping("/{clientId}/active/total")
+    public ResponseEntity<Long> getTotalActiveQuotesByClientID(@PathVariable Long clientId) {
+        long total = quoteService.getActiveQuotesByClientID(clientId);
+        return ResponseEntity.ok(total);
+    }
+
+    // Total de citas activas de hoy para un cliente específico
+    @GetMapping("/{clientId}/active/hoy")
+    public ResponseEntity<Long> getTodayActiveQuotesByClientId(@PathVariable Long clientId) {
+        long totalToday = quoteService.getTodayActiveQuotesByClientId(clientId);
+        return ResponseEntity.ok(totalToday);
     }
 
 }

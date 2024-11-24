@@ -1,5 +1,7 @@
 package com.example.back.service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,5 +98,15 @@ public class PetService {
         return petRepository.findActivePetsByClientId(clientId, pageable);
     }
     
+
+    // Total de mascotas activas
+    public long getTotalActivePets() {
+        return petRepository.countTodayActivePets();
+    }
+
+    //id y name de pets por clientId
+    public List<Map<String, Object>> getActivePetsForClient(Long clientId) {
+        return petRepository.PetsActiveForClient(clientId);
+    }
 }
 

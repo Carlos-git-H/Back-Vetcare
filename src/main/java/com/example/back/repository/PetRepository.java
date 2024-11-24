@@ -1,5 +1,8 @@
 package com.example.back.repository;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +41,14 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
                 "p.client.idClient = :clientId AND " + 
                 "p.status = '1'")
         Page<Pet> findActivePetsByClientId(@Param("clientId") Long clientId, Pageable pageable);
+
+        
+        // Total de pets activas de hoy
+        @Query(value = "SELECT COUNT(*) FROM vc_tbpe WHERE status = '1'", nativeQuery = true)
+        long countTodayActivePets();
+
+        // id y nombre de los pets por client
+    @Query(value = "SELECT id_pet AS id, name AS name FROM vc_tbpe WHERE status = '1' AND client_id = :clientId", nativeQuery = true)
+    List<Map<String, Object>> PetsActiveForClient(@Param("clientId") Long clientId);
+
 }

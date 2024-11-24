@@ -1,7 +1,9 @@
 package com.example.back.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,4 +82,39 @@ public class QuoteService {
     public Page<Quote> getActiveQuotesByClientId(Long clientId, Pageable pageable) {
         return quoteRepository.findActiveQuotesByClientId(clientId, pageable);
     }
+
+    public List<Map<String, Object>> getActiveQuotes() {
+        return quoteRepository.findActiveQuotes("1");
+    }
+
+    // Total de citas activas
+    public long getTotalActiveQuotes() {
+        return quoteRepository.countActiveQuotes();
+    }
+
+    // Total de citas activas de hoy
+    public long getTodayActiveQuotes() {
+        return quoteRepository.countTodayActiveQuotes();
+    }
+
+    /*---------------------Cliente-------------------- */
+
+    //Contenido para el citas del calendar
+    // Método para obtener citas activas por ID de cliente
+    public List<Map<String, Object>> getActiveQuotesByClientId(Long clientId) {
+        return quoteRepository.findActiveQuotesByClientId(clientId);
+    }
+    
+
+    // Total de citas activas para un cliente específico
+    public long getActiveQuotesByClientID(Long clientId) {
+        return quoteRepository.countActiveQuotesByClientId(clientId);
+    }
+
+    // Total de citas activas de hoy para un cliente específico
+    public long getTodayActiveQuotesByClientId(Long clientId) {
+        return quoteRepository.countTodayActiveQuotesByClientId(clientId);
+    }
+
+    
 }

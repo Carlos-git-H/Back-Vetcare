@@ -1,6 +1,8 @@
 package com.example.back.repository;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -50,4 +52,39 @@ public interface QuoteRepository extends JpaRepository<Quote,Long>{
             "q.pet.client.idClient = :clientId AND " + 
             "q.status = '1'")
     Page<Quote> findActiveQuotesByClientId(@Param("clientId") Long clientId, Pageable pageable);
+
+
+    @Query(value = "SELECT q.id_quote AS idQuote, q.hour AS hour, q.date AS date, q.status AS status, " +
+               "q.status_pag AS statusPag, p.name AS petName, s.name AS serviceName, " +
+               "c.first_name AS clientFirstName, c.first_last_name AS clientFirstLastName " +
+               "FROM vc_tbqu q " +
+               "JOIN vc_tbpe p ON q.pet_id = p.id_pet " +
+               "JOIN vc_tbse s ON q.service_id = s.id_service " +
+               "JOIN vc_tbcl c ON p.client_id = c.id_client " +
+               "WHERE q.status = :status", nativeQuery = true)
+    List<Map<String, Object>> findActiveQuotes(@Param("status") String status);
+
+    // Total de citas activas
+    @Query(value = "SELECT COUNT(*) FROM vc_tbqu WHERE status = '1'", nativeQuery = true)
+    long countActiveQuotes();
+
+    // Total de citas activas de hoy
+    @Query(value = "SELECT COUNT(*) FROM vc_tbqu WHERE status = '1' AND date = CURRENT_DATE", nativeQuery = true)
+    long countTodayActiveQuotes();
+
+    /*---------------------Cliente-------------------- */
+
+    //Contenido para el citas del calendar
+    @Query(value = "SELECT q.id_quote AS idQuote, q.hour AS hour, q.date AS date, q.status AS status, q.status_pag AS statusPag, p.name AS petName, s.name AS serviceName FROM vc_tbqu q JOIN vc_tbpe p ON q.pet_id = p.id_pet JOIN vc_tbse s ON q.service_id = s.id_service WHERE q.status = '1' AND p.client_id = :clientId", nativeQuery = true)
+        List<Map<String, Object>> findActiveQuotesByClientId(@Param("clientId") Long clientId);
+
+        // Total de citas activas para un cliente específico
+    @Query(value = "SELECT COUNT(*) FROM vc_tbqu q JOIN vc_tbpe p ON q.pet_id = p.id_pet WHERE q.status = '1' AND p.client_id = :clientId", nativeQuery = true)
+    long countActiveQuotesByClientId(@Param("clientId") Long clientId);
+
+    // Total de citas activas de hoy para un cliente específico
+    @Query(value = "SELECT COUNT(*) FROM vc_tbqu q JOIN vc_tbpe p ON q.pet_id = p.id_pet WHERE q.status = '1' AND q.date = CURRENT_DATE AND p.client_id = :clientId", nativeQuery = true)
+    long countTodayActiveQuotesByClientId(@Param("clientId") Long clientId);
+
+
 }

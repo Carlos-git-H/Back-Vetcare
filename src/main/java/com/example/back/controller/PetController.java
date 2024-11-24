@@ -118,4 +118,18 @@ public class PetController {
             return ResponseEntity.status(400).body("Error al bloquear la mascota.");
         }
     }
+
+    // Endpoint para obtener el total de mascotas activas
+    @GetMapping("/active/total")
+    public ResponseEntity<Long> getTotalActivePets() {
+        long totalActivePets = petService.getTotalActivePets();
+        return ResponseEntity.ok(totalActivePets);
+    }
+
+    //obtener id y nombre de pets por client id
+    @GetMapping("/{clientId}/active")
+    public ResponseEntity<List<Map<String, Object>>> getActivePetsForClient(@PathVariable Long clientId) {
+        List<Map<String, Object>> activePets = petService.getActivePetsForClient(clientId);
+        return ResponseEntity.ok(activePets);
+    }
 }
