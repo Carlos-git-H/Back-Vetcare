@@ -60,6 +60,11 @@
 			<version>2.1.7</version>
 		</dependency>
 
+		<!-- Spring Boot Starter WebFlux (para WebClient) -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 
 	</dependencies>
 
