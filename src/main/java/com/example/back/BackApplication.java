@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 public class BackApplication {
 
-	@Value("${openai.key}")
+	@Value("${chatgpt.key}")
 	private String openaiApiKey;
 
 
